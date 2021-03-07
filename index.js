@@ -11,6 +11,8 @@ const { Vec3 } = require('vec3').Vec3
 global.THREE = require('three')
 const Chat = require('./lib/chat')
 
+let texturesVersion = "1.16.4" //1.16.4 by default
+
 let status = 'Waiting for user'
 
 const maxPitch = 0.5 * Math.PI
@@ -36,13 +38,13 @@ async function reloadHotbar (bot) {
   for (let i = 0; i < 9; i++) {
     // eslint-disable-next-line no-undef
     const http = new XMLHttpRequest()
-    let url = bot.inventory.slots[bot.inventory.hotbarStart + i] ? window.location.href + 'textures/' + bot.version + '/items/' + bot.inventory.slots[bot.inventory.hotbarStart + i].name + '.png' : ''
+    let url = bot.inventory.slots[bot.inventory.hotbarStart + i] ? window.location.href + 'textures/' + texturesVersion + '/items/' + bot.inventory.slots[bot.inventory.hotbarStart + i].name + '.png' : ''
     http.open('HEAD', url)
 
     http.onreadystatechange = function () {
       if (this.readyState === this.DONE) {
         if (this.status === 404) {
-          url = bot.inventory.slots[bot.inventory.hotbarStart + i] ? window.location.href + 'textures/' + bot.version + '/blocks/' + bot.inventory.slots[bot.inventory.hotbarStart + i].name + '.png' : ''
+          url = bot.inventory.slots[bot.inventory.hotbarStart + i] ? window.location.href + 'textures/' + texturesVersion + '/blocks/' + bot.inventory.slots[bot.inventory.hotbarStart + i].name + '.png' : ''
         }
         document.getElementById('hotbar-' + i).src = url
       }
@@ -128,6 +130,10 @@ async function main () {
     reloadHotbar(bot)
 
     const version = bot.version
+
+    texturesVersion = Viewer.version ? viewer.version : texturesVersion
+
+    console.log("Set textures version: " + texturesVersion)
 
     const center = bot.entity.position
 
@@ -268,13 +274,13 @@ async function main () {
 
       // eslint-disable-next-line no-undef
       const http = new XMLHttpRequest()
-      let url = newItem ? window.location.href + 'textures/' + bot.version + '/items/' + newItem.name + '.png' : ''
+      let url = newItem ? window.location.href + 'textures/' + texturesVersion + '/items/' + newItem.name + '.png' : ''
       http.open('HEAD', url)
 
       http.onreadystatechange = function () {
         if (this.readyState === this.DONE) {
           if (this.status === 404) {
-            url = newItem ? window.location.href + 'textures/' + bot.version + '/blocks/' + newItem.name + '.png' : ''
+            url = newItem ? window.location.href + 'textures/' + texturesVersion + '/blocks/' + newItem.name + '.png' : ''
           }
           document.getElementById('hotbar-' + (slot - bot.inventory.hotbarStart)).src = url
         }
